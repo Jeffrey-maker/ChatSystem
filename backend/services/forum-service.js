@@ -1,12 +1,14 @@
-const ForumPost = require('../models/ForumPost')
 
-exports.createPost = async (db, username, content, image) => {
-    const result = await db.collection('forumPosts').insertOne(new ForumPost({
+
+exports.createPost = async (db, userId, username, content, image) => {
+    const result = await db.collection('forumPosts').insertOne({
+        userId,
         username,
         content,
         image,
-    }));
-    return result.insertId;
+        createdAt: new Date()
+    });
+    return result.insertedId;
 }
 
 exports.getPosts = async (db) => {

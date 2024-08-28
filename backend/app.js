@@ -1,9 +1,12 @@
 const express = require('express');
-const authRoutes = require('./routes/auth-route');
 const authMiddleware = require('./middlewares/AuthMiddleware');
 const connectDB = require('../database/mongodb');
 const cors = require('cors');
-const forumRoutes = require('./routes/forum-route')
+const authRoutes = require('./routes/auth-route');
+const forumRoutes = require('./routes/forum-route');
+const chatRoutes = require('./routes/chat-route');
+const contactRoutes = require('./routes/contact-route');
+const courseRoute = require('./routes/course-route');
 
 const app = express();
 app.use(cors()); // This enables CORS for all routes
@@ -12,6 +15,9 @@ app.use('/uploads', express.static('uploads'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/forum', forumRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/course',courseRoute);
 
 app.use('/api/protected', authMiddleware, (req, res) => {
     res.json({ message: 'This is a protected route' });

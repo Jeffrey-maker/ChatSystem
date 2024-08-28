@@ -22,9 +22,9 @@ exports.login = async (req, res) => {
         const { email, password } = req.body;
         const db = req.app.locals.db;
 
-        const { token, user } = await authService.login(db, email, password);
+        const { token, userId } = await authService.login(db, email, password);
 
-        res.json({ message: 'User logged in successfully', token});
+        res.json({ message: 'User logged in successfully', token, userId});
     } catch (error) {
         if (error.message === 'User not found' || error.message === 'Invalid credentials') {
             return res.status(400).json({ error: error.message });

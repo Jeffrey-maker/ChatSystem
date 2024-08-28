@@ -1,7 +1,7 @@
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const jwtConfig = require('../config/jwtConfig');
+const { v4: uuidv4 } = require('uuid');
 
 exports.register = async (db, username, email, password) => {
     const userCollection = db.collection('users');
@@ -12,17 +12,21 @@ exports.register = async (db, username, email, password) => {
         throw new Error('User already exists');
     }
 
+    // Generate a unique id
+    const userId = uuidv4();
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert the new user into the database
     const result = await userCollection.insertOne({
+        userId,
         username,
         email,
         password: hashedPassword,
     });
 
-    return result.insertedId;
+    return userId;
 }
 
 exports.login = async (db, email, password) => {
@@ -43,5 +47,13 @@ exports.login = async (db, email, password) => {
     // Generate a token
     const token = jwt.sign({ id: user._id }, jwtConfig.secret, { expiresIn: '1h' });
 
-    return { token, user };
+    return { token, userId: user.userId };
 };
+
+exports.changeUsername = async (db, email) => {
+
+}
+
+exports.changePassword = async (db, email) => {
+
+}
